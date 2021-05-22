@@ -1,0 +1,30 @@
+.graph-control {
+    background-color: gray;
+}
+
+.row-group{
+    border: 1px solid rgba(1, 1, 1, 0.1);
+    border-radius: 0.2rem;
+}
+
+.container-main {
+    min-height: 100vh;
+}
+
+#mynetwork{
+    min-height: 100vh;
+}
+
+.vertice-inicial-col {
+    border: 1px solid black;
+    border-right: 0px;
+}
+
+.btn-vertice-inicial-col{
+    border: 1px solid black;
+    border-left: 0px;
+}
+
+.btn-reiniciar-col{
+    border: 1px solid black;
+}

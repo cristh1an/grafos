@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title>Nearest Neighbours ALgorithm VIsualization - Cristhian Carvalho</title>
+</head>
+
+<body>
+    <div class="container container-main">
+        <div class="row m-4">
+            <div class="col-4">
+                <div class="row row-group m-0 p-2">
+                    <div class="col-6 d-flex">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control lbl-vertice" placeholder="Label" aria-label="Label"
+                                aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex justify-content-center">
+                        <button class="btn btn-sm btn-primary" id="btn-add-vertice">Adicionar vértice</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 row row-group m-0 p-2">
+                <div class="col-3">
+                    <select class="form-select form-select-sm select-vertice" aria-label=".form-select-sm example"
+                        id="select-vertice-1">
+                        <option selected>selecione vértice</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select class="form-select form-select-sm select-vertice" aria-label=".form-select-sm example"
+                        id="select-vertice-2">
+                        <option selected>selecione vértice</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" id="input-peso" placeholder="Peso" aria-label="Peso"
+                            aria-describedby="inputGroup-sizing-sm">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-sm btn-primary" id="btn-add-aresta">Adicionar aresta</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-3 p-2 vertice-inicial-col">
+                <div class="form-group row">
+                    <label for="select-vertice-inicial" class="col-5 col-form-label">Vértice inicial: </label>
+                    <div class="col-7">
+                        <select class="form-select form-select-sm select-vertice" id="select-vertice-inicial">
+                            <option selected>selecione vértice</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 p-2 btn-vertice-inicial-col">
+                <button class="btn btn-sm btn-success" id="btn-visualizacao">
+                    Iniciar visualização <i class="bi bi-play-fill"></i>
+                </button>
+            </div>
+            <div class="col-2 btn-reiniciar-col p-2" style="display:none;">
+                <button class="btn btn-sm btn-warning" id="btn-reiniciar">
+                    Reiniciar visualização <i class="bi bi-arrow-repeat"></i>
+                </button>
+            </div>
+
+        </div>
+        <div id="mynetwork">
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
+</body>
+
+</html>
