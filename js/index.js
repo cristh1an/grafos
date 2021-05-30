@@ -74,6 +74,16 @@ function visualizarCircuito(circuito){
   });
 }
 
+function isTodosVerticesVisitados(){
+  nodes.forEach( n => {
+    if(!n.visited){
+      return false;
+    }
+  });
+
+  return true;
+}
+
 function reiniciarCoresGrafo(){
   nodes.forEach(n => {
     nodes.update({ ...n, color: 'green', visited: false });
@@ -130,20 +140,20 @@ function getUnvisitedEdges(nodeId) {
 
 function inicializarGrafoVis(){
   var nodesArray = [
-    // { id: 1, visited: false, label: "1" },
-    // { id: 2, visited: false, label: "2" },
-    // { id: 3, visited: false, label: "3" },
-    // { id: 4, visited: false, label: "4" },
-    // { id: 5, visited: false, label: "5" }
+    { id: 1, visited: false, label: "1" },
+    { id: 2, visited: false, label: "2" },
+    { id: 3, visited: false, label: "3" },
+    { id: 4, visited: false, label: "4" },
+    { id: 5, visited: false, label: "5" }
   ];
 
   var edgesArray = [
-    // { from: 1, to: 2, label: "1" },
-    // { from: 2, to: 3, label: "2" },
-    // { from: 3, to: 4, label: "3" },
-    // { from: 4, to: 5, label: "4" },
-    // { from: 4, to: 2, label: "2" },
-    // { from: 4, to: 1, label: "7" },
+    { from: 1, to: 2, label: "1" },
+    { from: 2, to: 3, label: "2" },
+    { from: 3, to: 4, label: "3" },
+    { from: 4, to: 5, label: "4" },
+    { from: 4, to: 2, label: "2" },
+    { from: 4, to: 1, label: "7" },
   ];
   // create an array with edges
   edges = new vis.DataSet(edgesArray);
