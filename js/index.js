@@ -16,6 +16,7 @@ function updateDropdownVertices(nodes, select) {
 
 }
 
+//atualiza o dropdown para escolher o vértice "para" dependendo do vértice "de" escolhido
 function onSelectVertice(e) {
   const valor = $(e.target).val();
   const selectVertice2 = $("#select-vertice-2");
@@ -43,16 +44,18 @@ function onSelectVertice(e) {
   selectVertice2.removeAttr("disabled");
 }
 
+//retorna a lista de arestas ordenadas por peso
 function getSortedEdges(edges){
   return edges.sort(function (a, b) {
     return parseInt(a.label) - parseInt(b.label);
   });
 }
 
-function visualizarCircuito(circuito){
+
+function visualizarTrilha(trilha){
   let i = 0;
 
-  circuito.forEach((obj) => {
+  trilha.forEach((obj) => {
 
     if (obj.type == 'node') {
       let node = nodes.get(obj.id);
@@ -80,16 +83,8 @@ function visualizarCircuito(circuito){
   }, 500 + 1000 * (i));
 }
 
-function isTodosVerticesVisitados(){
-  nodes.forEach( n => {
-    if(!n.visited){
-      return false;
-    }
-  });
 
-  return true;
-}
-
+//reseta as propriedades visuais dos grafos
 function reiniciarCoresGrafo(){
   nodes.forEach(n => {
     nodes.update({ ...n, color: 'green', visited: false });
@@ -100,14 +95,14 @@ function reiniciarCoresGrafo(){
   });
 }
 
-function getNNACircuito(node) {
+function getNNATrilha(node) {
   let edges = getUnvisitedEdges(node.id);
-  let circuito = [];
+  let trilha = [];
 
   nodes.update({ ...node, visited: true });
 
   if (node){
-    circuito.push({
+    trilha.push({
       type: 'node',
       id: node.id
     });
@@ -119,15 +114,15 @@ function getNNACircuito(node) {
     let nextNodeId = edges[0].to == node.id ? edges[0].from : edges[0].to;
     let nextNode = nodes.get(nextNodeId);
     if (!nextNode.visited) {
-      circuito.push({
+      trilha.push({
         type: 'edge',
         id: edges[0].id
       })
     }
 
-    circuito = circuito.concat(getNNACircuito(nextNode));
+    trilha = trilha.concat(getNNATrilha(nextNode));
   }
-  return circuito;
+  return trilha;
 }
 
 function getUnvisitedEdges(nodeId) {
@@ -248,13 +243,13 @@ $(function () {
   $("#form-visualizacao").submit((ev) => {
     ev.preventDefault();
     let firstNode = nodes.get($("#select-vertice-inicial").val());
-    let circuito = getNNACircuito(firstNode);
+    let trilha = getNNATrilha(firstNode);
 
 
     $(".btn-reiniciar-col").show();
     $(".btn-vertice-inicial-col, .vertice-inicial-col").hide();
 
-    visualizarCircuito(circuito);
+    visualizarTrilha(trilha);
     $("#btn-reiniciar").attr("disabled", "disabled");
   });
 
