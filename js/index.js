@@ -4,7 +4,10 @@
 function updateDropdownVertices(nodes, select) {
 
   select.html("");
-  select.append(new Option("selecione vértice", -1));
+  let firstOption = new Option("selecione vértice", "");
+  $(firstOption).attr("disabled", "disabled");
+  $(firstOption).attr("selected", "selected");
+  select.append(firstOption);
   nodes.forEach(n => {
     select.append(new Option(n.label, n.id));
   });
@@ -15,13 +18,28 @@ function onSelectVertice(e) {
   const valor = $(e.target).val();
   const selectVertice2 = $("#select-vertice-2");
 
-  if (valor == "-1") {
+  if (valor == "") {
     selectVertice2.attr("disabled", "true");
     return;
   }
 
+  debugger;
+
   updateDropdownVertices(nodes, selectVertice2);
   selectVertice2.find(`option[value=${valor}]`).remove();
+
+  if (edges) {
+    edgesFromSelectedVertice = edges.get({
+      filter: (e => {
+        return e.from == valor || e.to == valor;
+      })
+    });
+
+    edgesFromSelectedVertice.forEach(e => {
+      selectVertice2.find(`option[value=${e.to == valor ? e.from : e.to}]`).remove();
+    });
+  }
+
   selectVertice2.removeAttr("disabled");
 }
 
@@ -41,25 +59,27 @@ function visitar(nodeId) {
 
   nodes.update({ ...currentNode, visited: true });
 
-  if(currentNode)
-  caminho.push({
-    type: 'node',
-    id: currentNode.id
-  })
+  if (currentNode)
+    caminho.push({
+      type: 'node',
+      id: currentNode.id
+    })
 
   edges.sort(function (a, b) {
     return parseInt(a.label) - parseInt(b.label);
   });
 
-  for (let i = 0; i < edges.length; i++) {
-    let nextNodeId = edges[i].to == currentNode.id ? edges[i].from : edges[i].to;
+  //for (let i = 0; i < edges.length; i++) {
+  if (edges.length) {
+    let nextNodeId = edges[0].to == currentNode.id ? edges[0].from : edges[0].to;
 
     if (!nodes.get(nextNodeId).visited) {
       caminho.push({
         type: 'edge',
-        id: edges[i].id
+        id: edges[0].id
       })
     }
+    //}
 
     caminho = caminho.concat(visitar(nextNodeId));
   }
@@ -133,13 +153,17 @@ $(function () {
     $(".lbl-vertice").val("");
   });
 
-  $("#btn-add-aresta").click((ev) => {
+  $("#form-edge").submit((ev) => {
+    ev.preventDefault();
     let label = $(".lbl-vertice").val();
     const vertice1 = parseInt($("#select-vertice-1").val());
     const vertice2 = parseInt($("#select-vertice-2").val());
     const peso = $("#input-peso").val();
     edges.add({ from: vertice1, to: vertice2, label: peso });
     $("#input-peso").val("");
+    $("#select-vertice-1").val("");
+    $("#select-vertice-2").val("")
+
   });
 
   nodes.on('add', e => {
@@ -148,21 +172,30 @@ $(function () {
 
   $("#select-vertice-1").on('change', onSelectVertice);
 
-  $("#btn-visualizacao").click((ev) => {
+  $("#form-visualizacao").submit((ev) => {
+    ev.preventDefault();
+
     let res = visitar($("#select-vertice-inicial").val(), {});
-    debugger;
     let i = 0;
 
     $(".btn-reiniciar-col").show();
     $(".btn-vertice-inicial-col, .vertice-inicial-col").hide();
     res.forEach((obj) => {
-      
-      if(obj.type == 'node'){
+
+      if (obj.type == 'node') {
         let node = nodes.get(obj.id);
-        setTimeout(() => { nodes.update({ ...node, color: 'red' }) }, 500 + 1000 * (i));
-      }else if(obj.type == 'edge'){
+        setTimeout(() => { 
+          nodes.update({ ...node, color: 'red' });
+          debugger;
+          $("#result").html($("#result").html() + `${node.id} `);
+        
+        }, 500 + 1000 * (i));
+      } else if (obj.type == 'edge') {
         let edge = edges.get(obj.id);
-        setTimeout(() => { edges.update({ ...edge, width: 5 }) }, 1000 + 1000 * (i));
+        setTimeout(() => { 
+          edges.update({ ...edge, width: 5, color: { color: 'blue' } });
+          $("#result").html($("#result").html() + "-> ");
+        }, 1000 + 1000 * (i));
       }
 
       i++;
@@ -171,16 +204,16 @@ $(function () {
   });
 
   $("#btn-reiniciar").click(ev => {
-    
+
     $(".btn-reiniciar-col").hide();
     $(".btn-vertice-inicial-col, .vertice-inicial-col").show();
-
+    $("#result").html("");
     nodes.forEach(n => {
-      nodes.update({...n, color:'green', visited: false});
+      nodes.update({ ...n, color: 'green', visited: false });
     });
 
     edges.forEach(e => {
-      edges.update({...e, width: 1});
+      edges.update({ ...e, width: 1, color: {color: 'gray'} });
     });
 
   });

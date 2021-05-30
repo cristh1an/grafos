@@ -28,52 +28,76 @@
                     </div>
                 </div>
             </div>
-            <div class="col-8 row row-group m-0 p-2">
-                <div class="col-3">
-                    <select class="form-select form-select-sm select-vertice" aria-label=".form-select-sm example"
-                        id="select-vertice-1">
-                        <option selected>selecione vértice</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <select class="form-select form-select-sm select-vertice" aria-label=".form-select-sm example"
-                        id="select-vertice-2">
-                        <option selected>selecione vértice</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <div class="input-group input-group-sm">
-                        <input type="text" class="form-control" id="input-peso" placeholder="Peso" aria-label="Peso"
-                            aria-describedby="inputGroup-sizing-sm">
+
+            <div class="col-8">
+                <form id="form-edge">
+                    <div class="row row-group m-0 p-2">
+                        <div class="col-3">
+                            <select class="form-select form-select-sm select-vertice"
+                                aria-label=".form-select-sm example" id="select-vertice-1" required>
+                                <option selected disabled>selecione vértice</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <select class="form-select form-select-sm select-vertice"
+                                aria-label=".form-select-sm example" id="select-vertice-2" required>
+                                <option selected disabled value="">selecione vértice</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control" id="input-peso" placeholder="Peso"
+                                    aria-label="Peso" aria-describedby="inputGroup-sizing-sm" required>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-sm btn-primary" id="btn-add-aresta">Adicionar
+                                aresta</button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-sm btn-primary" id="btn-add-aresta">Adicionar aresta</button>
-                </div>
+                </form>
             </div>
         </div>
-        <div class="row justify-content-center mt-5">
-            <div class="col-3 p-2 vertice-inicial-col">
-                <div class="form-group row">
-                    <label for="select-vertice-inicial" class="col-5 col-form-label">Vértice inicial: </label>
-                    <div class="col-7">
-                        <select class="form-select form-select-sm select-vertice" id="select-vertice-inicial">
-                            <option selected>selecione vértice</option>
-                        </select>
+        <div class="row text-center">
+            <h3 id="result">
+
+            </h3>
+        </div>
+
+        <div class="row mt-3 justify-content-center">
+            <form id="form-visualizacao">
+                <div class="row justify-content-center ">
+
+                    <div class="col-6 p-2 vertice-inicial-col">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="select-vertice-inicial">Vértice inicial: </label>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-select form-select-sm select-vertice" id="select-vertice-inicial" required>
+                                    <option selected disabled value="">selecione vértice</option>
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <button class="btn btn-sm btn-success" id="btn-visualizacao">
+                                    Iniciar visualização <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                    <!-- <div class="col-2 p-2 btn-vertice-inicial-col">
+                        <button class="btn btn-sm btn-success" id="btn-visualizacao">
+                            Iniciar visualização <i class="bi bi-play-fill"></i>
+                        </button>
+                    </div> -->
+
                 </div>
-            </div>
-            <div class="col-2 p-2 btn-vertice-inicial-col">
-                <button class="btn btn-sm btn-success" id="btn-visualizacao">
-                    Iniciar visualização <i class="bi bi-play-fill"></i>
-                </button>
-            </div>
+            </form>
             <div class="col-2 btn-reiniciar-col p-2" style="display:none;">
                 <button class="btn btn-sm btn-warning" id="btn-reiniciar">
                     Reiniciar visualização <i class="bi bi-arrow-repeat"></i>
                 </button>
             </div>
-
         </div>
         <div id="mynetwork">
 
