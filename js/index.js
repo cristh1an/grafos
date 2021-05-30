@@ -4,9 +4,11 @@
 function updateDropdownVertices(nodes, select) {
 
   select.html("");
+  
   let firstOption = new Option("selecione vértice", "");
   $(firstOption).attr("disabled", "disabled");
   $(firstOption).attr("selected", "selected");
+  
   select.append(firstOption);
   nodes.forEach(n => {
     select.append(new Option(n.label, n.id));
@@ -22,8 +24,6 @@ function onSelectVertice(e) {
     selectVertice2.attr("disabled", "true");
     return;
   }
-
-  debugger;
 
   updateDropdownVertices(nodes, selectVertice2);
   selectVertice2.find(`option[value=${valor}]`).remove();
@@ -43,47 +43,75 @@ function onSelectVertice(e) {
   selectVertice2.removeAttr("disabled");
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-
-function visitar(nodeId) {
-  let edges = getUnvisitedEdges(nodeId);
-  let caminho = [];
-  let currentNode = nodes.get(nodeId);
-
-  nodes.update({ ...currentNode, visited: true });
-
-  if (currentNode)
-    caminho.push({
-      type: 'node',
-      id: currentNode.id
-    })
-
-  edges.sort(function (a, b) {
+function getSortedEdges(edges){
+  return edges.sort(function (a, b) {
     return parseInt(a.label) - parseInt(b.label);
   });
+}
 
-  //for (let i = 0; i < edges.length; i++) {
+function visualizarCircuito(circuito){
+  let i = 0;
+
+  circuito.forEach((obj) => {
+
+    if (obj.type == 'node') {
+      let node = nodes.get(obj.id);
+      setTimeout(() => { 
+        nodes.update({ ...node, color: 'red' });
+        debugger;
+        $("#result").html($("#result").html() + `${node.label} `);
+      
+      }, 500 + 1000 * (i));
+    } else if (obj.type == 'edge') {
+      let edge = edges.get(obj.id);
+      setTimeout(() => { 
+        edges.update({ ...edge, width: 5, color: { color: 'blue' } });
+        $("#result").html($("#result").html() + "-> ");
+      }, 1000 + 1000 * (i));
+    }
+
+    i++;
+  });
+}
+
+function reiniciarCoresGrafo(){
+  nodes.forEach(n => {
+    nodes.update({ ...n, color: 'green', visited: false });
+  });
+
+  edges.forEach(e => {
+    edges.update({ ...e, width: 1, color: {color: 'gray'} });
+  });
+}
+
+function getNNACircuito(node) {
+  let edges = getUnvisitedEdges(node.id);
+  let circuito = [];
+
+  nodes.update({ ...node, visited: true });
+
+  if (node){
+    circuito.push({
+      type: 'node',
+      id: node.id
+    });
+  }
+
+  edges = getSortedEdges(edges);
+  
   if (edges.length) {
-    let nextNodeId = edges[0].to == currentNode.id ? edges[0].from : edges[0].to;
-
-    if (!nodes.get(nextNodeId).visited) {
-      caminho.push({
+    let nextNodeId = edges[0].to == node.id ? edges[0].from : edges[0].to;
+    let nextNode = nodes.get(nextNodeId);
+    if (!nextNode.visited) {
+      circuito.push({
         type: 'edge',
         id: edges[0].id
       })
     }
-    //}
 
-    caminho = caminho.concat(visitar(nextNodeId));
+    circuito = circuito.concat(getNNACircuito(nextNode));
   }
-  return caminho;
+  return circuito;
 }
 
 function getUnvisitedEdges(nodeId) {
@@ -100,14 +128,7 @@ function getUnvisitedEdges(nodeId) {
   return connectedEdges;
 }
 
-let edges = null;
-let nodes = null;
-let network = null;
-
-
-$(function () {
-  // create an array with nodes
-  let lastId = 0;
+function inicializarGrafoVis(){
   var nodesArray = [
     // { id: 1, visited: false, label: "1" },
     // { id: 2, visited: false, label: "2" },
@@ -134,6 +155,7 @@ $(function () {
     nodes: nodes,
     edges: edges,
   };
+
   var options = {};
   options.nodes = {
     color: 'green'
@@ -144,8 +166,22 @@ $(function () {
       inherit: false
     }
   }
+  
   options.height = Math.round($(window).height() * 0.95) + 'px';
   network = new vis.Network(container, data, options);
+}
+
+let edges = null;
+let nodes = null;
+let network = null;
+
+
+$(function () {
+  // create an array with nodes
+  let lastId = 0;
+
+  inicializarGrafoVis();
+
   updateDropdownVertices(nodes, $(".select-vertice"));
   $("#btn-add-vertice").click((ev) => {
     let label = $(".lbl-vertice").val();
@@ -174,32 +210,14 @@ $(function () {
 
   $("#form-visualizacao").submit((ev) => {
     ev.preventDefault();
+    let firstNode = nodes.get($("#select-vertice-inicial").val());
+    let circuito = getNNACircuito(firstNode);
 
-    let res = visitar($("#select-vertice-inicial").val(), {});
-    let i = 0;
 
     $(".btn-reiniciar-col").show();
     $(".btn-vertice-inicial-col, .vertice-inicial-col").hide();
-    res.forEach((obj) => {
 
-      if (obj.type == 'node') {
-        let node = nodes.get(obj.id);
-        setTimeout(() => { 
-          nodes.update({ ...node, color: 'red' });
-          debugger;
-          $("#result").html($("#result").html() + `${node.id} `);
-        
-        }, 500 + 1000 * (i));
-      } else if (obj.type == 'edge') {
-        let edge = edges.get(obj.id);
-        setTimeout(() => { 
-          edges.update({ ...edge, width: 5, color: { color: 'blue' } });
-          $("#result").html($("#result").html() + "-> ");
-        }, 1000 + 1000 * (i));
-      }
-
-      i++;
-    });
+    visualizarCircuito(circuito);
 
   });
 
@@ -208,14 +226,8 @@ $(function () {
     $(".btn-reiniciar-col").hide();
     $(".btn-vertice-inicial-col, .vertice-inicial-col").show();
     $("#result").html("");
-    nodes.forEach(n => {
-      nodes.update({ ...n, color: 'green', visited: false });
-    });
 
-    edges.forEach(e => {
-      edges.update({ ...e, width: 1, color: {color: 'gray'} });
-    });
-
+    reiniciarCoresGrafo();
   });
 
 })
