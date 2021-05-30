@@ -72,6 +72,12 @@ function visualizarCircuito(circuito){
 
     i++;
   });
+
+  i--;
+
+  setTimeout(() => {
+    $("#btn-reiniciar").removeAttr("disabled");
+  }, 500 + 1000 * (i));
 }
 
 function isTodosVerticesVisitados(){
@@ -138,22 +144,42 @@ function getUnvisitedEdges(nodeId) {
   return connectedEdges;
 }
 
+function getLatestNodeId(){
+
+  let ids = nodes.map(n => { return n.id});
+  
+  if(!ids.length){
+    return 0;
+  }
+
+  return Math.max(...ids);
+}
+
 function inicializarGrafoVis(){
   var nodesArray = [
-    { id: 1, visited: false, label: "1" },
-    { id: 2, visited: false, label: "2" },
-    { id: 3, visited: false, label: "3" },
-    { id: 4, visited: false, label: "4" },
-    { id: 5, visited: false, label: "5" }
+    { id: 1, visited: false, label: "A" },
+    { id: 2, visited: false, label: "B" },
+    { id: 3, visited: false, label: "C" },
+    { id: 4, visited: false, label: "D" },
+    { id: 5, visited: false, label: "E" },
+    { id: 6, visited: false, label: "F" },
+    { id: 7, visited: false, label: "G" }
   ];
 
   var edgesArray = [
-    { from: 1, to: 2, label: "1" },
-    { from: 2, to: 3, label: "2" },
-    { from: 3, to: 4, label: "3" },
-    { from: 4, to: 5, label: "4" },
-    { from: 4, to: 2, label: "2" },
-    { from: 4, to: 1, label: "7" },
+    { from: 1, to: 2, label: "9" },
+    { from: 1, to: 3, label: "27" },
+    { from: 1, to: 4, label: "29" },
+    { from: 2, to: 4, label: "16" },
+    { from: 2, to: 5, label: "37" },
+    { from: 3, to: 4, label: "18" },
+    { from: 3, to: 6, label: "22" },
+    { from: 4, to: 5, label: "28" },
+    { from: 4, to: 6, label: "14" },
+    { from: 4, to: 7, label: "31" },
+    { from: 5, to: 6, label: "23" },
+    { from: 5, to: 7, label: "26" },
+    { from: 6, to: 7, label: "20" }
   ];
   // create an array with edges
   edges = new vis.DataSet(edgesArray);
@@ -195,7 +221,8 @@ $(function () {
   updateDropdownVertices(nodes, $(".select-vertice"));
   $("#btn-add-vertice").click((ev) => {
     let label = $(".lbl-vertice").val();
-    nodes.add({ id: ++lastId, label: label.length ? label : lastId.toString(), visited: false });
+    lastId = getLatestNodeId() + 1;
+    nodes.add({ id: lastId, label: label.length ? label : lastId.toString(), visited: false });
     $(".lbl-vertice").val("");
   });
 
@@ -228,7 +255,20 @@ $(function () {
     $(".btn-vertice-inicial-col, .vertice-inicial-col").hide();
 
     visualizarCircuito(circuito);
+    $("#btn-reiniciar").attr("disabled", "disabled");
+  });
 
+  $("#btn-apagar").click(ev => {
+    debugger;
+    edges.forEach(e => {
+      edges.remove(e)
+    });
+
+    nodes.forEach(n => {
+      nodes.remove(n)
+    });
+
+    updateDropdownVertices(nodes, $(".select-vertice"));
   });
 
   $("#btn-reiniciar").click(ev => {
